@@ -1,5 +1,7 @@
 package ar.com.kecat.models;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
@@ -46,8 +48,14 @@ public class Liquidacion extends ModeloBase implements Serializable {
     private Date fechaVencimiento= new Date();
 
     @OneToMany(mappedBy="liquidacion",fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     @Where(clause ="activo =1")
     private List<Consumo> consumos = new ArrayList<>();
+
+    @OneToMany(mappedBy="liquidacion",fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @Where(clause ="activo =1")
+    private List<Cobranza> cobranzas = new ArrayList<>();
 
     public enum Estado {
         ABIERTA ("Liquidación actual"),
@@ -107,6 +115,14 @@ public class Liquidacion extends ModeloBase implements Serializable {
         this.consumos = consumos;
     }
 
+    public List<Cobranza> getCobranzas() {
+        return cobranzas;
+    }
+
+    public void setCobranzas(List<Cobranza> cobranzas) {
+        this.cobranzas = cobranzas;
+    }
+
     public Estado getEstado() {
         return estado;
     }
@@ -114,6 +130,7 @@ public class Liquidacion extends ModeloBase implements Serializable {
     public void setEstado(Estado estado) {
         this.estado = estado;
     }
+
 
     public static final class Builder {
         protected Boolean activo = true;
@@ -124,12 +141,13 @@ public class Liquidacion extends ModeloBase implements Serializable {
         private Date fechaCierre= new Date();
         private Date fechaVencimiento= new Date();
         private List<Consumo> consumos = new ArrayList<>();
+        private List<Cobranza> cobranzas = new ArrayList<>();
         private Estado estado;
 
         private Builder() {
         }
 
-        public static Builder create() {
+        public static Builder aLiquidacion() {
             return new Builder();
         }
 
@@ -173,6 +191,11 @@ public class Liquidacion extends ModeloBase implements Serializable {
             return this;
         }
 
+        public Builder withCobranzas(List<Cobranza> cobranzas) {
+            this.cobranzas = cobranzas;
+            return this;
+        }
+
         public Builder withEstado(Estado estado) {
             this.estado = estado;
             return this;
@@ -188,6 +211,7 @@ public class Liquidacion extends ModeloBase implements Serializable {
             liquidacion.setFechaCierre(fechaCierre);
             liquidacion.setFechaVencimiento(fechaVencimiento);
             liquidacion.setConsumos(consumos);
+            liquidacion.setCobranzas(cobranzas);
             liquidacion.setEstado(estado);
             return liquidacion;
         }

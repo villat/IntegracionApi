@@ -5,14 +5,17 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
+import java.util.Optional;
+
 @RepositoryRestResource
 public interface ClienteRepository extends CrudRepository<Cliente, Long> {
 
     @Override
     default void delete(Long aLong){
-        Cliente one = findOne(aLong);
-        one.setActivo(false);
-        save(one);
+        Optional.ofNullable(findOne(aLong)).map(cliente -> {
+            cliente.setActivo(false);
+            return save(cliente);
+        });
     }
 
     @Override
