@@ -1,0 +1,195 @@
+package ar.com.kecat.models;
+
+import org.hibernate.annotations.Where;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@Entity
+@Table(name="liquidaciones")
+@Where(clause = "activo = 1")
+public class Liquidacion extends ModeloBase implements Serializable {
+
+    private static final long serialVersionUID = 2944643005691251573L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="id_tarjeta")
+    private Tarjeta tarjeta;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="fecha_cierre")
+    private Date fechaCierre= new Date();
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="fecha_vencimiento")
+    private Date fechaVencimiento= new Date();
+
+    @OneToMany(mappedBy="liquidacion",fetch = FetchType.EAGER)
+    @Where(clause ="activo =1")
+    private List<Consumo> consumos = new ArrayList<>();
+
+    public enum Estado {
+        ABIERTA ("Liquidación actual"),
+        CERRADA ("Liquidación cerrada"),
+        ELIMINADA ("Liquidación eliminada");
+
+        private String descripcion;
+
+        Estado(String descripcion) {
+            this.descripcion= descripcion;
+        }
+
+        public String getDescripcion() {return this.descripcion;}
+    }
+
+    @Column(name="estado")
+    @Enumerated(EnumType.STRING)
+    private Estado estado;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Tarjeta getTarjeta() {
+        return tarjeta;
+    }
+
+    public void setTarjeta(Tarjeta tarjeta) {
+        this.tarjeta = tarjeta;
+    }
+
+    public Date getFechaCierre() {
+        return fechaCierre;
+    }
+
+    public void setFechaCierre(Date fechaCierre) {
+        this.fechaCierre = fechaCierre;
+    }
+
+    public Date getFechaVencimiento() {
+        return fechaVencimiento;
+    }
+
+    public void setFechaVencimiento(Date fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
+
+    public List<Consumo> getConsumos() {
+        return consumos;
+    }
+
+    public void setConsumos(List<Consumo> consumos) {
+        this.consumos = consumos;
+    }
+
+    public Estado getEstado() {
+        return estado;
+    }
+
+    public void setEstado(Estado estado) {
+        this.estado = estado;
+    }
+
+    public static final class Builder {
+        protected Boolean activo = true;
+        protected Date fechaCreacion = new Date();
+        protected Date fechaActualizacion = new Date();
+        private Long id;
+        private Tarjeta tarjeta;
+        private Date fechaCierre= new Date();
+        private Date fechaVencimiento= new Date();
+        private List<Consumo> consumos = new ArrayList<>();
+        private Estado estado;
+
+        private Builder() {
+        }
+
+        public static Builder create() {
+            return new Builder();
+        }
+
+        public Builder withActivo(Boolean activo) {
+            this.activo = activo;
+            return this;
+        }
+
+        public Builder withFechaCreacion(Date fechaCreacion) {
+            this.fechaCreacion = fechaCreacion;
+            return this;
+        }
+
+        public Builder withFechaActualizacion(Date fechaActualizacion) {
+            this.fechaActualizacion = fechaActualizacion;
+            return this;
+        }
+
+        public Builder withId(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withTarjeta(Tarjeta tarjeta) {
+            this.tarjeta = tarjeta;
+            return this;
+        }
+
+        public Builder withFechaCierre(Date fechaCierre) {
+            this.fechaCierre = fechaCierre;
+            return this;
+        }
+
+        public Builder withFechaVencimiento(Date fechaVencimiento) {
+            this.fechaVencimiento = fechaVencimiento;
+            return this;
+        }
+
+        public Builder withConsumos(List<Consumo> consumos) {
+            this.consumos = consumos;
+            return this;
+        }
+
+        public Builder withEstado(Estado estado) {
+            this.estado = estado;
+            return this;
+        }
+
+        public Liquidacion build() {
+            Liquidacion liquidacion = new Liquidacion();
+            liquidacion.setActivo(activo);
+            liquidacion.setFechaCreacion(fechaCreacion);
+            liquidacion.setFechaActualizacion(fechaActualizacion);
+            liquidacion.setId(id);
+            liquidacion.setTarjeta(tarjeta);
+            liquidacion.setFechaCierre(fechaCierre);
+            liquidacion.setFechaVencimiento(fechaVencimiento);
+            liquidacion.setConsumos(consumos);
+            liquidacion.setEstado(estado);
+            return liquidacion;
+        }
+    }
+}
