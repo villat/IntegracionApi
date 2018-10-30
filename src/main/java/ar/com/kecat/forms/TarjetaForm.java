@@ -1,25 +1,27 @@
-package ar.com.kecat.dto;
+package ar.com.kecat.forms;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class TarjetaDTO {
+public class TarjetaForm {
 
-    private Long clienteId;
+    private Long idCliente;
     private String nroTarjeta;
-    private Date fechaValidaDesde = new Date();
-    private Date fechaValidaHasta = new Date();
+    private Date fechaValidaDesde;
+    private Date fechaValidaHasta;
+    @NotNull
     private Long codigoSeguridad;
     private Long diaCierre;
     private String categoria;
     private BigDecimal montoLimite;
 
-    public Long getClienteId() {
-        return clienteId;
+    public Long getIdCliente() {
+        return idCliente;
     }
 
-    public void setClienteId(Long clienteId) {
-        this.clienteId = clienteId;
+    public void setIdCliente(Long idCliente) {
+        this.idCliente = idCliente;
     }
 
     public String getNroTarjeta() {

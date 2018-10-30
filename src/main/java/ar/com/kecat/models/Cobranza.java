@@ -1,5 +1,7 @@
 package ar.com.kecat.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
@@ -20,6 +22,7 @@ import java.util.Date;
 @Entity
 @Table(name="cobranzas")
 @Where(clause = "activo = 1")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
 public class Cobranza extends ModeloBase implements Serializable {
 
     private static final long serialVersionUID = 3980796348979222562L;
@@ -36,7 +39,7 @@ public class Cobranza extends ModeloBase implements Serializable {
     @Column(name="fecha")
     private Date fecha = new Date();
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_liquidacion")
     private Liquidacion liquidacion;
 

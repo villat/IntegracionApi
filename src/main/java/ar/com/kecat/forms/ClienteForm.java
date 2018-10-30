@@ -1,6 +1,6 @@
-package ar.com.kecat.dto;
+package ar.com.kecat.forms;
 
-public class ClienteDTO {
+public class ClienteForm {
 
     private String nombre;
     private String apellido;

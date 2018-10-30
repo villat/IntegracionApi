@@ -1,5 +1,7 @@
 package ar.com.kecat.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
@@ -26,6 +28,7 @@ import java.util.List;
 @Entity
 @Table(name="liquidaciones")
 @Where(clause = "activo = 1")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
 public class Liquidacion extends ModeloBase implements Serializable {
 
     private static final long serialVersionUID = 2944643005691251573L;
@@ -35,7 +38,7 @@ public class Liquidacion extends ModeloBase implements Serializable {
     @Column(name="id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_tarjeta")
     private Tarjeta tarjeta;
 

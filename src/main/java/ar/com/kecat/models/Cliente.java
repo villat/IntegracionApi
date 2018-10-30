@@ -1,5 +1,7 @@
 package ar.com.kecat.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
@@ -18,6 +20,7 @@ import java.util.List;
 @Entity
 @Table(name="clientes")
 @Where(clause = "activo = 1")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
 public class Cliente extends ModeloBase implements Serializable {
 
     private static final long serialVersionUID = 3057549723550122608L;

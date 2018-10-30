@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Type;
-import java.util.stream.Collectors;
 
 @Component
 public class ExposeEntityIdRestConfiguration extends RepositoryRestConfigurerAdapter {
@@ -17,7 +16,7 @@ public class ExposeEntityIdRestConfiguration extends RepositoryRestConfigurerAda
 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
-        config.exposeIdsFor(entityManager.getMetamodel().getEntities().stream().map(Type::getJavaType).collect(Collectors.toList()).toArray(new Class[0]));
+        config.exposeIdsFor(entityManager.getMetamodel().getEntities().stream().map(Type::getJavaType).toArray(Class[]::new));
     }
 
 }
