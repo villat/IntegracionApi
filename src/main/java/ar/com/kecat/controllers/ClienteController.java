@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class ClienteController {
 
     @Autowired
-    ClienteRepository clienteRepository;
+    private ClienteRepository clienteRepository;
 
     @Transactional
     @PutMapping("/clientes/{idCliente}")
