@@ -26,6 +26,9 @@ public class Establecimiento extends ModeloBase implements Serializable {
     @Column(name="nro_establecimiento")
     private String nroEstablecimiento;
 
+    @Column(name="cuit")
+    private String cuit;
+
     @Column(name="razon_social")
     private String razonSocial;
 
@@ -46,6 +49,14 @@ public class Establecimiento extends ModeloBase implements Serializable {
 
     public void setNroEstablecimiento(String nroEstablecimiento) {
         this.nroEstablecimiento = nroEstablecimiento;
+    }
+
+    public String getCuit() {
+        return cuit;
+    }
+
+    public void setCuit(String cuit) {
+        this.cuit = cuit;
     }
 
     public String getRazonSocial() {
@@ -71,6 +82,7 @@ public class Establecimiento extends ModeloBase implements Serializable {
         protected Date fechaActualizacion = new Date();
         private Long id;
         private String nroEstablecimiento;
+        private String cuit;
         private String razonSocial;
         private String domicilio;
 
@@ -106,6 +118,11 @@ public class Establecimiento extends ModeloBase implements Serializable {
             return this;
         }
 
+        public Builder withCuit(String cuit) {
+            this.cuit = cuit;
+            return this;
+        }
+
         public Builder withRazonSocial(String razonSocial) {
             this.razonSocial = razonSocial;
             return this;
@@ -123,6 +140,7 @@ public class Establecimiento extends ModeloBase implements Serializable {
             establecimiento.setFechaActualizacion(fechaActualizacion);
             establecimiento.setId(id);
             establecimiento.setNroEstablecimiento(nroEstablecimiento);
+            establecimiento.setCuit(cuit);
             establecimiento.setRazonSocial(razonSocial);
             establecimiento.setDomicilio(domicilio);
             return establecimiento;

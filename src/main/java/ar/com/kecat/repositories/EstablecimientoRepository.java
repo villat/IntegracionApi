@@ -7,7 +7,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.Optional;
 
-@RepositoryRestResource(path = "establecimientos")
+@RepositoryRestResource(path = "establecimientos", collectionResourceRel = "establecimientos")
 public interface EstablecimientoRepository extends CrudRepository<Establecimiento, Long> {
 
     @Override

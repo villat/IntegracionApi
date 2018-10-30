@@ -11,6 +11,14 @@ import java.util.Optional;
 public interface TarjetaRepository extends CrudRepository<Tarjeta, Long> {
 
     @Override
+    @RestResource(exported = false)
+    <S extends Tarjeta> S save(S s);
+
+    @Override
+    @RestResource(exported = false)
+    <S extends Tarjeta> Iterable<S> save(Iterable<S> iterable);
+
+    @Override
     default void delete(Long aLong){
         Optional.ofNullable(findOne(aLong)).map(tarjeta -> {
             tarjeta.setActivo(false);
