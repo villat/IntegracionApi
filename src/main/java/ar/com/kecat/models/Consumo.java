@@ -40,7 +40,7 @@ public abstract class Consumo extends ModeloBase implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name="fecha")
-    private Date fecha = new Date();
+    protected Date fecha = new Date();
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_establecimiento")

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.Type;
 
+//Needed to expose the IDs on the GET methods created by HATEOAS
 @Component
 public class ExposeEntityIdRestConfiguration extends RepositoryRestConfigurerAdapter {
 

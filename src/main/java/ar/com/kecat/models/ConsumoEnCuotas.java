@@ -1,5 +1,7 @@
 package ar.com.kecat.models;
 
+import ar.com.kecat.helpers.DateUtils;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -19,6 +21,20 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
     @Column(name = "interes")
     private Long interes;
 
+    @Column(name = "saldado")
+    private Boolean saldado = false;
+
+    public boolean hayCuotasPendientes(){
+        if(saldado) return false;
+        //Calculamos hasta que mes hay que pagar cuotas, se le resta 1 porque en la liquidación actual ya se cargó el consumo
+        //Y lo multiplicamos por 30 para evitar problemas con meses como febrero u otros que tienen 31 días.
+        if(!DateUtils.getDateNDaysLaterByDate(fecha, (cantCuotas - 1)*30).after(new Date())){
+            saldado = true;
+            return false;
+        }
+        return true;
+    }
+
     public Integer getCantCuotas() {
         return cantCuotas;
     }
@@ -35,6 +51,14 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
         this.interes = interes;
     }
 
+    public Boolean getSaldado() {
+        return saldado;
+    }
+
+    public void setSaldado(Boolean saldado) {
+        this.saldado = saldado;
+    }
+
     public static final class Builder {
         protected Boolean activo = true;
         protected Date fechaCreacion = new Date();
@@ -44,6 +68,7 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
         private Integer cantCuotas;
         private Date fecha = new Date();
         private Long interes;
+        private Boolean saldado = false;
         private Establecimiento establecimiento;
         private String descripcion;
         private BigDecimal monto;
@@ -95,6 +120,11 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
             return this;
         }
 
+        public Builder withSaldado(Boolean saldado) {
+            this.saldado = saldado;
+            return this;
+        }
+
         public Builder withEstablecimiento(Establecimiento establecimiento) {
             this.establecimiento = establecimiento;
             return this;
@@ -120,6 +150,7 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
             consumoEnCuotas.setCantCuotas(cantCuotas);
             consumoEnCuotas.setFecha(fecha);
             consumoEnCuotas.setInteres(interes);
+            consumoEnCuotas.setSaldado(saldado);
             consumoEnCuotas.setEstablecimiento(establecimiento);
             consumoEnCuotas.setDescripcion(descripcion);
             consumoEnCuotas.setMonto(monto);

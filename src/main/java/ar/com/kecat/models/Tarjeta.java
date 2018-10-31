@@ -2,6 +2,8 @@ package ar.com.kecat.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
@@ -37,6 +39,7 @@ public class Tarjeta extends ModeloBase implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_cliente")
+    @NotFound(action = NotFoundAction.IGNORE)
     private Cliente cliente;
 
     @Column(name="nro_tarjeta")

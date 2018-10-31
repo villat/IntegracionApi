@@ -7,8 +7,11 @@ import java.util.Date;
 public class DateUtils {
 
     public static Date getDateOneMonthLaterByDate(Date date){
-        return Date.from(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusMonths(1)
-                .atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return Date.from(getLocalDateFromDate(date).plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public static Date getDateNDaysLaterByDate(Date date, int dias){
+        return Date.from(getLocalDateFromDate(date).plusDays(dias).atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
     public static Date getDateOneMonthLaterByDay(int day){
@@ -21,5 +24,9 @@ public class DateUtils {
 
     private static LocalDate getLocalDateOneMonthLaterByDay(int day){
         return LocalDate.now().plusMonths(1).withDayOfMonth(day);
+    }
+
+    public static LocalDate getLocalDateFromDate(Date date){
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 }

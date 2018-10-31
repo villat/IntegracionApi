@@ -1,5 +1,6 @@
 package ar.com.kecat.models;
 
+import ar.com.kecat.helpers.DateUtils;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -23,6 +24,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -86,10 +89,30 @@ public class Liquidacion extends ModeloBase implements Serializable {
 
     public BigDecimal calcularSaldoPendiente(){
         if(pagada) return BigDecimal.ZERO;
-        BigDecimal montoConsumos = consumos.stream().map(Consumo::getMonto).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        BigDecimal montoConsumos = calcularSaldoDeConsumosEnteros().add(calcularSaldoDeConsumosEnCuotas());
         if(montoConsumos.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
         BigDecimal montoCobranzas = cobranzas.stream().map(Cobranza::getMonto).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
         return montoConsumos.subtract(montoCobranzas);
+    }
+
+    private BigDecimal calcularSaldoDeConsumosEnteros(){
+        return consumos.stream()
+                .filter(ConsumoEntero.class::isInstance)
+                .map(Consumo::getMonto)
+                .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+    }
+
+    private BigDecimal calcularSaldoDeConsumosEnCuotas(){
+        final LocalDate hoy = DateUtils.getLocalDateFromDate(new Date());
+        return consumos.stream()
+                .filter(ConsumoEnCuotas.class::isInstance)
+                .map(ConsumoEnCuotas.class::cast)
+                .filter(ConsumoEnCuotas::hayCuotasPendientes)
+                .map(consumo -> {
+                    if(ChronoUnit.DAYS.between(DateUtils.getLocalDateFromDate(consumo.getFecha()), hoy)%30 == 0){
+                        //TODO: Impactar el consumo
+                    }
+                });
     }
 
     public Long getId() {
