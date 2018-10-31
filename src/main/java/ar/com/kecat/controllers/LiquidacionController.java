@@ -19,6 +19,11 @@ public class LiquidacionController {
     @Autowired
     private TarjetaRepository tarjetaRepository;
 
+    @GetMapping("/liquidaciones")
+    @ResponseBody ResponseEntity getLiquidaciones(){
+        return ResponseEntity.status(HttpStatus.OK).body(liquidacionRepository.findAll());
+    }
+
     @GetMapping("/tarjetas/{idTarjeta}/liquidaciones")
     @ResponseBody ResponseEntity getLiquidacionesPorTarjeta(@PathVariable Long idTarjeta){
         Tarjeta tarjeta = tarjetaRepository.findOne(idTarjeta);
