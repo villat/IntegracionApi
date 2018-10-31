@@ -27,6 +27,8 @@ public interface LiquidacionRepository extends CrudRepository<Liquidacion, Long>
 
     List<Liquidacion> findByTarjeta(Tarjeta tarjeta);
 
+    List<Liquidacion> findByEstado(Estado estado);
+
     @Query("SELECT liq FROM Liquidacion liq WHERE liq.estado = :estado AND liq.tarjeta = :tarjeta")
     Liquidacion findByEstadoAndTarjeta(@Param("estado") Estado estado, @Param("tarjeta") Tarjeta tarjeta);
 }

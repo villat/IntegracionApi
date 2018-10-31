@@ -167,7 +167,7 @@ public class Liquidacion extends ModeloBase implements Serializable {
         private List<Consumo> consumos = new ArrayList<>();
         private List<Cobranza> cobranzas = new ArrayList<>();
         private Estado estado;
-        private Boolean pagada;
+        private Boolean pagada = false;
 
         private Builder() {
         }
