@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import java.util.List;
 
@@ -14,10 +15,16 @@ import java.util.List;
 public interface LiquidacionRepository extends CrudRepository<Liquidacion, Long> {
 
     @Override
+    @RestResource(exported = false)
+    <S extends Liquidacion> S save(S s);
+
+    @Override
     default void delete(Liquidacion liquidacion){
         liquidacion.setActivo(false);
         save(liquidacion);
     }
+
+    List<Liquidacion> findByTarjeta(Tarjeta tarjeta);
 
     @Query("SELECT liq FROM Liquidacion liq WHERE liq.estado = :estado AND liq.tarjeta = :tarjeta")
     Liquidacion findByEstadoAndTarjeta(@Param("estado") Estado estado, @Param("tarjeta") Tarjeta tarjeta);

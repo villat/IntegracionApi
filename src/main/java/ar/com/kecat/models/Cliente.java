@@ -12,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,6 +43,10 @@ public class Cliente extends ModeloBase implements Serializable {
 
     @Column(name = "nro_documento")
     private String nroDocumento;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name="fecha_nacimiento")
+    private Date fechaNacimiento = new Date();
 
     @OneToMany(mappedBy="cliente",fetch = FetchType.EAGER)
     @Where(clause ="activo =1")
@@ -86,6 +92,14 @@ public class Cliente extends ModeloBase implements Serializable {
         this.nroDocumento = nroDocumento;
     }
 
+    public Date getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(Date fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
     public List<Tarjeta> getTarjetas() {
         return tarjetas;
     }
@@ -103,6 +117,7 @@ public class Cliente extends ModeloBase implements Serializable {
         private String apellido;
         private String tipoDocumento;
         private String nroDocumento;
+        private Date fechaNacimiento;
         private List<Tarjeta> tarjetas = new ArrayList<>();
 
         private Builder() {
@@ -152,6 +167,11 @@ public class Cliente extends ModeloBase implements Serializable {
             return this;
         }
 
+        public Builder withFechaNacimiento(Date fechaNacimiento){
+            this.fechaNacimiento = fechaNacimiento;
+            return this;
+        }
+
         public Builder withTarjetas(List<Tarjeta> tarjetas) {
             this.tarjetas = tarjetas;
             return this;
@@ -167,6 +187,7 @@ public class Cliente extends ModeloBase implements Serializable {
             cliente.setApellido(apellido);
             cliente.setTipoDocumento(tipoDocumento);
             cliente.setNroDocumento(nroDocumento);
+            cliente.setFechaNacimiento(fechaNacimiento);
             cliente.setTarjetas(tarjetas);
             return cliente;
         }
