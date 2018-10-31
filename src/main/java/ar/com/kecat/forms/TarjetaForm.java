@@ -6,12 +6,17 @@ import java.util.Date;
 
 public class TarjetaForm {
 
+    @NotNull
     private Long idCliente;
+    @NotNull
     private String nroTarjeta;
+    @NotNull
     private Date fechaValidaDesde;
+    @NotNull
     private Date fechaValidaHasta;
     @NotNull
     private Long codigoSeguridad;
+    @NotNull
     private Long diaCierre;
     private String categoria;
     private BigDecimal montoLimite;

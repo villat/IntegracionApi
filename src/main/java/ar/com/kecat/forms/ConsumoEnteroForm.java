@@ -1,14 +1,20 @@
 package ar.com.kecat.forms;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class ConsumoEnteroForm {
 
+    @NotNull
     private Date fecha;
+    @NotNull
     private Long idEstablecimiento;
+    @NotNull
     private String descripcion;
+    @NotNull
     private BigDecimal montoTotal;
+    @NotNull
     private Long codigoSeguridad;
 
     public Date getFecha() {

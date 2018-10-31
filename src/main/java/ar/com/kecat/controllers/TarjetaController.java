@@ -24,20 +24,18 @@ public class TarjetaController {
 
     @Autowired
     private ClienteRepository clienteRepository;
-
     @Autowired
     private TarjetaRepository tarjetaRepository;
 
     @Autowired
     private LocalValidatorFactoryBean validator;
-
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
         binder.addValidators(validator);
     }
 
     @PostMapping("/tarjetas")
-    @ResponseBody ResponseEntity<Tarjeta> postTarjeta(@Valid @RequestBody TarjetaForm tarjetaForm){
+    @ResponseBody ResponseEntity postTarjeta(@Valid @RequestBody TarjetaForm tarjetaForm){
         Cliente cliente = Optional.ofNullable(tarjetaForm.getIdCliente())
                 .map(id -> clienteRepository.findOne(id)).orElse(null);
         if(cliente != null){
@@ -52,9 +50,9 @@ public class TarjetaController {
                     .withMontoLimite(tarjetaForm.getMontoLimite())
                     .build();
             tarjetaRepository.save(tarjeta);
-            return new ResponseEntity<>(tarjeta, HttpStatus.OK);
+            return ResponseEntity.status(HttpStatus.OK).body(tarjeta);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cliente no válido");
     }
 
 

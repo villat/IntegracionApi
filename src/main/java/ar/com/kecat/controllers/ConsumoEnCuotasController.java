@@ -1,11 +1,11 @@
 package ar.com.kecat.controllers;
 
-import ar.com.kecat.forms.ConsumoEnteroForm;
-import ar.com.kecat.models.ConsumoEntero;
+import ar.com.kecat.forms.ConsumoEnCuotasForm;
+import ar.com.kecat.models.ConsumoEnCuotas;
 import ar.com.kecat.models.Establecimiento;
 import ar.com.kecat.models.Liquidacion;
 import ar.com.kecat.models.Tarjeta;
-import ar.com.kecat.repositories.ConsumoEnteroRepository;
+import ar.com.kecat.repositories.ConsumoEnCuotasRepository;
 import ar.com.kecat.repositories.EstablecimientoRepository;
 import ar.com.kecat.repositories.LiquidacionRepository;
 import ar.com.kecat.repositories.TarjetaRepository;
@@ -26,10 +26,10 @@ import java.util.Optional;
 
 
 @RepositoryRestController
-public class ConsumoEnteroController {
+public class ConsumoEnCuotasController {
 
     @Autowired
-    private ConsumoEnteroRepository consumoEnteroRepository;
+    private ConsumoEnCuotasRepository consumoEnCuotasRepository;
     @Autowired
     private EstablecimientoRepository establecimientoRepository;
     @Autowired
@@ -44,24 +44,27 @@ public class ConsumoEnteroController {
         binder.addValidators(validator);
     }
 
-    @PostMapping("/tarjetas/{idTarjeta}/consumosEnteros")
-    @ResponseBody ResponseEntity postConsumoEntero(@PathVariable Long idTarjeta, @Valid @RequestBody ConsumoEnteroForm consumoEnteroForm){
-        Establecimiento establecimiento = Optional.ofNullable(consumoEnteroForm.getIdEstablecimiento())
+    @PostMapping("/tarjetas/{idTarjeta}/consumosEnCuotas")
+    @ResponseBody ResponseEntity postConsumoEnCuotas(@PathVariable Long idTarjeta, @Valid @RequestBody ConsumoEnCuotasForm consumoEnCuotasForm){
+        Establecimiento establecimiento = Optional.ofNullable(consumoEnCuotasForm.getIdEstablecimiento())
                 .map(id -> establecimientoRepository.findOne(id)).orElse(null);
         if(establecimiento != null){
             Tarjeta tarjeta = tarjetaRepository.findOne(idTarjeta);
             //El código de seguridad debe coincidir con el de la tarjeta almacenada
-            if(tarjeta != null && consumoEnteroForm.getCodigoSeguridad().compareTo(tarjeta.getCodigoSeguridad()) == 0){
+            if(tarjeta != null && consumoEnCuotasForm.getCodigoSeguridad().compareTo(tarjeta.getCodigoSeguridad()) == 0){
                 Liquidacion liquidacion = liquidacionRepository.findByEstadoAndTarjeta(Liquidacion.Estado.ABIERTA, tarjeta);
-                ConsumoEntero consumoEntero = ConsumoEntero.Builder.create()
-                        .withDescripcion(consumoEnteroForm.getDescripcion())
+                ConsumoEnCuotas consumoEnCuotas = ConsumoEnCuotas.Builder.create()
+                        .withDescripcion(consumoEnCuotasForm.getDescripcion())
                         .withEstablecimiento(establecimiento)
-                        .withFecha(consumoEnteroForm.getFecha())
-                        .withMontoTotal(consumoEnteroForm.getMontoTotal())
+                        .withFecha(consumoEnCuotasForm.getFecha())
+                        .withMontoTotal(consumoEnCuotasForm.getMontoTotal())
                         .withLiquidacion(liquidacion)
+                        .withCantCuotas(consumoEnCuotasForm.getCantCuotas())
+                        .withInteres(consumoEnCuotasForm.getInteres())
+                        .withMontoCuota(consumoEnCuotasForm.getMontoCuota())
                         .build();
-                consumoEnteroRepository.save(consumoEntero);
-                return ResponseEntity.status(HttpStatus.OK).body(consumoEntero);
+                consumoEnCuotasRepository.save(consumoEnCuotas);
+                return ResponseEntity.status(HttpStatus.OK).body(consumoEnCuotas);
             } else {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tarjeta o código de seguridad inválidos");
             }

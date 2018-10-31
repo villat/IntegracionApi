@@ -5,6 +5,7 @@ import ar.com.kecat.models.Liquidacion.Estado;
 import ar.com.kecat.models.Tarjeta;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
@@ -19,5 +20,5 @@ public interface LiquidacionRepository extends CrudRepository<Liquidacion, Long>
     }
 
     @Query("SELECT liq FROM Liquidacion liq WHERE liq.estado = :estado AND liq.tarjeta = :tarjeta")
-    Liquidacion findByEstadoAndTarjeta(Estado estado, Tarjeta tarjeta);
+    Liquidacion findByEstadoAndTarjeta(@Param("estado") Estado estado, @Param("tarjeta") Tarjeta tarjeta);
 }
