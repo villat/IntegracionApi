@@ -48,6 +48,9 @@ public class Cliente extends ModeloBase implements Serializable {
     @Column(name="fecha_nacimiento")
     private Date fechaNacimiento = new Date();
 
+    @Column(name="cbu")
+    private String cbu;
+
     @OneToMany(mappedBy="cliente",fetch = FetchType.EAGER)
     @Where(clause ="activo =1")
     private List<Tarjeta> tarjetas = new ArrayList<>();
@@ -100,6 +103,14 @@ public class Cliente extends ModeloBase implements Serializable {
         this.fechaNacimiento = fechaNacimiento;
     }
 
+    public String getCbu() {
+        return cbu;
+    }
+
+    public void setCbu(String cbu) {
+        this.cbu = cbu;
+    }
+
     public List<Tarjeta> getTarjetas() {
         return tarjetas;
     }
@@ -118,6 +129,7 @@ public class Cliente extends ModeloBase implements Serializable {
         private String tipoDocumento;
         private String nroDocumento;
         private Date fechaNacimiento;
+        private String cbu;
         private List<Tarjeta> tarjetas = new ArrayList<>();
 
         private Builder() {
@@ -172,6 +184,11 @@ public class Cliente extends ModeloBase implements Serializable {
             return this;
         }
 
+        public Builder withCbu(String cbu) {
+            this.cbu = cbu;
+            return this;
+        }
+
         public Builder withTarjetas(List<Tarjeta> tarjetas) {
             this.tarjetas = tarjetas;
             return this;
@@ -188,6 +205,7 @@ public class Cliente extends ModeloBase implements Serializable {
             cliente.setTipoDocumento(tipoDocumento);
             cliente.setNroDocumento(nroDocumento);
             cliente.setFechaNacimiento(fechaNacimiento);
+            cliente.setCbu(cbu);
             cliente.setTarjetas(tarjetas);
             return cliente;
         }

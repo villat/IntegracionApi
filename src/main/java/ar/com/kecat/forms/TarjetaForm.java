@@ -19,7 +19,10 @@ public class TarjetaForm {
     @NotNull
     private Long diaCierre;
     private String categoria;
+    @NotNull
     private BigDecimal montoLimite;
+    @NotNull
+    private Boolean pagoMinimo;
 
     public Long getIdCliente() {
         return idCliente;
@@ -83,5 +86,13 @@ public class TarjetaForm {
 
     public void setMontoLimite(BigDecimal montoLimite) {
         this.montoLimite = montoLimite;
+    }
+
+    public Boolean getPagoMinimo() {
+        return pagoMinimo;
+    }
+
+    public void setPagoMinimo(Boolean pagoMinimo) {
+        this.pagoMinimo = pagoMinimo;
     }
 }

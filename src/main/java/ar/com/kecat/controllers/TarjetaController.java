@@ -55,6 +55,7 @@ public class TarjetaController {
                 .withFechaValidaDesde(tarjetaForm.getFechaValidaDesde())
                 .withFechaValidaHasta(tarjetaForm.getFechaValidaHasta())
                 .withMontoLimite(tarjetaForm.getMontoLimite())
+                .withPagoMinimo(tarjetaForm.getPagoMinimo())
                 .build();
         tarjetaRepository.save(tarjeta);
 

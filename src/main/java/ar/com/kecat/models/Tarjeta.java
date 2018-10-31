@@ -62,6 +62,9 @@ public class Tarjeta extends ModeloBase implements Serializable {
     @Column(name="monto_limite")
     private BigDecimal montoLimite;
 
+    @Column(name="pago_minimo")
+    private Boolean pagoMinimo = false;
+
     @OneToMany(mappedBy="tarjeta",fetch = FetchType.EAGER)
     @Where(clause ="activo =1")
     private List<Liquidacion> liquidaciones = new ArrayList<>();
@@ -138,6 +141,14 @@ public class Tarjeta extends ModeloBase implements Serializable {
         this.montoLimite = montoLimite;
     }
 
+    public Boolean getPagoMinimo() {
+        return pagoMinimo;
+    }
+
+    public void setPagoMinimo(Boolean pagoMinimo) {
+        this.pagoMinimo = pagoMinimo;
+    }
+
     public List<Liquidacion> getLiquidaciones() {
         return liquidaciones;
     }
@@ -160,6 +171,7 @@ public class Tarjeta extends ModeloBase implements Serializable {
         private Long diaCierre;
         private String categoria;
         private BigDecimal montoLimite;
+        private Boolean pagoMinimo = false;
         private List<Liquidacion> liquidaciones = new ArrayList<>();
 
         private Builder() {
@@ -229,6 +241,11 @@ public class Tarjeta extends ModeloBase implements Serializable {
             return this;
         }
 
+        public Builder withPagoMinimo(Boolean pagoMinimo) {
+            this.pagoMinimo = pagoMinimo;
+            return this;
+        }
+
         public Builder withLiquidaciones(List<Liquidacion> liquidaciones) {
             this.liquidaciones = liquidaciones;
             return this;
@@ -248,6 +265,7 @@ public class Tarjeta extends ModeloBase implements Serializable {
             tarjeta.setDiaCierre(diaCierre);
             tarjeta.setCategoria(categoria);
             tarjeta.setMontoLimite(montoLimite);
+            tarjeta.setPagoMinimo(pagoMinimo);
             tarjeta.setLiquidaciones(liquidaciones);
             return tarjeta;
         }
