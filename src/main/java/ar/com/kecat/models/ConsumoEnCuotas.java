@@ -58,7 +58,7 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
         private Long interes;
         private Establecimiento establecimiento;
         private String descripcion;
-        private BigDecimal montoTotal;
+        private BigDecimal monto;
 
         private Builder() {
         }
@@ -122,8 +122,8 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
             return this;
         }
 
-        public Builder withMontoTotal(BigDecimal montoTotal) {
-            this.montoTotal = montoTotal;
+        public Builder withMonto(BigDecimal monto) {
+            this.monto = monto;
             return this;
         }
 
@@ -140,7 +140,7 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
             consumoEnCuotas.setInteres(interes);
             consumoEnCuotas.setEstablecimiento(establecimiento);
             consumoEnCuotas.setDescripcion(descripcion);
-            consumoEnCuotas.setMontoTotal(montoTotal);
+            consumoEnCuotas.setMonto(monto);
             return consumoEnCuotas;
         }
     }

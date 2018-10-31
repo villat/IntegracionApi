@@ -21,7 +21,7 @@ public class ConsumoEntero extends Consumo implements Serializable {
         private Date fecha = new Date();
         private Establecimiento establecimiento;
         private String descripcion;
-        private BigDecimal montoTotal;
+        private BigDecimal monto;
 
         private Builder() {
         }
@@ -70,8 +70,8 @@ public class ConsumoEntero extends Consumo implements Serializable {
             return this;
         }
 
-        public Builder withMontoTotal(BigDecimal montoTotal) {
-            this.montoTotal = montoTotal;
+        public Builder withMonto(BigDecimal monto) {
+            this.monto = monto;
             return this;
         }
 
@@ -85,7 +85,7 @@ public class ConsumoEntero extends Consumo implements Serializable {
             consumoEntero.setFecha(fecha);
             consumoEntero.setEstablecimiento(establecimiento);
             consumoEntero.setDescripcion(descripcion);
-            consumoEntero.setMontoTotal(montoTotal);
+            consumoEntero.setMonto(monto);
             return consumoEntero;
         }
     }

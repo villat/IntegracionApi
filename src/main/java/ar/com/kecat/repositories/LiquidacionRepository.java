@@ -21,6 +21,7 @@ public interface LiquidacionRepository extends CrudRepository<Liquidacion, Long>
     @Override
     default void delete(Liquidacion liquidacion){
         liquidacion.setActivo(false);
+        liquidacion.setEstado(Estado.ELIMINADA);
         save(liquidacion);
     }
 

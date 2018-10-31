@@ -34,7 +34,7 @@ public abstract class Consumo extends ModeloBase implements Serializable {
     @Column(name="id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_liquidacion")
     private Liquidacion liquidacion;
 
@@ -49,8 +49,8 @@ public abstract class Consumo extends ModeloBase implements Serializable {
     @Column(name="descripcion")
     private String descripcion;
 
-    @Column(name="monto_total")
-    private BigDecimal montoTotal;
+    @Column(name="monto")
+    private BigDecimal monto;
 
     public Long getId() {
         return id;
@@ -92,12 +92,12 @@ public abstract class Consumo extends ModeloBase implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public BigDecimal getMontoTotal() {
-        return montoTotal;
+    public BigDecimal getMonto() {
+        return monto;
     }
 
-    public void setMontoTotal(BigDecimal montoTotal) {
-        this.montoTotal = montoTotal;
+    public void setMonto(BigDecimal monto) {
+        this.monto = monto;
     }
 
 }

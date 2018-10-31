@@ -57,7 +57,7 @@ public class ConsumoEnteroController {
                         .withDescripcion(consumoEnteroForm.getDescripcion())
                         .withEstablecimiento(establecimiento)
                         .withFecha(consumoEnteroForm.getFecha())
-                        .withMontoTotal(consumoEnteroForm.getMontoTotal())
+                        .withMonto(consumoEnteroForm.getMonto())
                         .withLiquidacion(liquidacion)
                         .build();
                 consumoEnteroRepository.save(consumoEntero);

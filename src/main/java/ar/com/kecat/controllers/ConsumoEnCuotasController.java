@@ -57,7 +57,7 @@ public class ConsumoEnCuotasController {
                         .withDescripcion(consumoEnCuotasForm.getDescripcion())
                         .withEstablecimiento(establecimiento)
                         .withFecha(consumoEnCuotasForm.getFecha())
-                        .withMontoTotal(consumoEnCuotasForm.getMontoTotal())
+                        .withMonto(consumoEnCuotasForm.getMonto())
                         .withLiquidacion(liquidacion)
                         .withCantCuotas(consumoEnCuotasForm.getCantCuotas())
                         .withInteres(consumoEnCuotasForm.getInteres())

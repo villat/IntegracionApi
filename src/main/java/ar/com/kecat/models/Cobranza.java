@@ -39,7 +39,7 @@ public class Cobranza extends ModeloBase implements Serializable {
     @Column(name="fecha")
     private Date fecha = new Date();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_liquidacion")
     private Liquidacion liquidacion;
 

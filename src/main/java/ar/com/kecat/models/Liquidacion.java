@@ -1,6 +1,7 @@
 package ar.com.kecat.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -21,6 +22,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +42,7 @@ public class Liquidacion extends ModeloBase implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_tarjeta")
+    @JsonIgnore
     private Tarjeta tarjeta;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -77,6 +80,17 @@ public class Liquidacion extends ModeloBase implements Serializable {
     @Column(name="estado")
     @Enumerated(EnumType.STRING)
     private Estado estado;
+
+    @Column(name="pagada")
+    private Boolean pagada = false;
+
+    public BigDecimal calcularSaldoPendiente(){
+        if(pagada) return BigDecimal.ZERO;
+        BigDecimal montoConsumos = consumos.stream().map(Consumo::getMonto).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        if(montoConsumos.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
+        BigDecimal montoCobranzas = cobranzas.stream().map(Cobranza::getMonto).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+        return montoConsumos.subtract(montoCobranzas);
+    }
 
     public Long getId() {
         return id;
@@ -134,6 +148,13 @@ public class Liquidacion extends ModeloBase implements Serializable {
         this.estado = estado;
     }
 
+    public Boolean getPagada() {
+        return pagada;
+    }
+
+    public void setPagada(Boolean pagada) {
+        this.pagada = pagada;
+    }
 
     public static final class Builder {
         protected Boolean activo = true;
@@ -146,11 +167,12 @@ public class Liquidacion extends ModeloBase implements Serializable {
         private List<Consumo> consumos = new ArrayList<>();
         private List<Cobranza> cobranzas = new ArrayList<>();
         private Estado estado;
+        private Boolean pagada;
 
         private Builder() {
         }
 
-        public static Builder aLiquidacion() {
+        public static Builder create() {
             return new Builder();
         }
 
@@ -204,6 +226,11 @@ public class Liquidacion extends ModeloBase implements Serializable {
             return this;
         }
 
+        public Builder withPagada(Boolean pagada){
+            this.pagada = pagada;
+            return this;
+        }
+
         public Liquidacion build() {
             Liquidacion liquidacion = new Liquidacion();
             liquidacion.setActivo(activo);
@@ -216,6 +243,7 @@ public class Liquidacion extends ModeloBase implements Serializable {
             liquidacion.setConsumos(consumos);
             liquidacion.setCobranzas(cobranzas);
             liquidacion.setEstado(estado);
+            liquidacion.setPagada(pagada);
             return liquidacion;
         }
     }

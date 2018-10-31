@@ -2,6 +2,7 @@ package ar.com.kecat.controllers;
 
 import ar.com.kecat.forms.TarjetaForm;
 import ar.com.kecat.models.Cliente;
+import ar.com.kecat.models.Liquidacion;
 import ar.com.kecat.models.Tarjeta;
 import ar.com.kecat.repositories.ClienteRepository;
 import ar.com.kecat.repositories.TarjetaRepository;
@@ -50,6 +51,10 @@ public class TarjetaController {
                     .withMontoLimite(tarjetaForm.getMontoLimite())
                     .build();
             tarjetaRepository.save(tarjeta);
+
+            //Se inicializa la primer liquidación
+//            Liquidacion liquidacion = Liquidacion.Builder.create()
+
             return ResponseEntity.status(HttpStatus.OK).body(tarjeta);
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cliente no válido");

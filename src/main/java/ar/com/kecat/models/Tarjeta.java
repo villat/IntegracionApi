@@ -35,7 +35,7 @@ public class Tarjeta extends ModeloBase implements Serializable {
     @Column(name="id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_cliente")
     private Cliente cliente;
 

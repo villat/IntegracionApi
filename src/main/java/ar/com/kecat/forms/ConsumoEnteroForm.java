@@ -13,7 +13,7 @@ public class ConsumoEnteroForm {
     @NotNull
     private String descripcion;
     @NotNull
-    private BigDecimal montoTotal;
+    private BigDecimal monto;
     @NotNull
     private Long codigoSeguridad;
 
@@ -41,12 +41,12 @@ public class ConsumoEnteroForm {
         this.descripcion = descripcion;
     }
 
-    public BigDecimal getMontoTotal() {
-        return montoTotal;
+    public BigDecimal getMonto() {
+        return monto;
     }
 
-    public void setMontoTotal(BigDecimal montoTotal) {
-        this.montoTotal = montoTotal;
+    public void setMonto(BigDecimal monto) {
+        this.monto = monto;
     }
 
     public Long getCodigoSeguridad() {
