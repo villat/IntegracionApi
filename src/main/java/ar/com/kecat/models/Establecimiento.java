@@ -26,11 +26,11 @@ public class Establecimiento extends ModeloBase implements Serializable {
     @Column(name="id")
     private Long id;
 
-    @Column(name="nro_establecimiento")
-    private String nroEstablecimiento;
-
     @Column(name="cuit")
     private String cuit;
+
+    @Column(name="cbu")
+    private String cbu;
 
     @Column(name="razon_social")
     private String razonSocial;
@@ -46,20 +46,20 @@ public class Establecimiento extends ModeloBase implements Serializable {
         this.id = id;
     }
 
-    public String getNroEstablecimiento() {
-        return nroEstablecimiento;
-    }
-
-    public void setNroEstablecimiento(String nroEstablecimiento) {
-        this.nroEstablecimiento = nroEstablecimiento;
-    }
-
     public String getCuit() {
         return cuit;
     }
 
     public void setCuit(String cuit) {
         this.cuit = cuit;
+    }
+
+    public String getCbu() {
+        return cbu;
+    }
+
+    public void setCbu(String cbu) {
+        this.cbu = cbu;
     }
 
     public String getRazonSocial() {
@@ -84,8 +84,8 @@ public class Establecimiento extends ModeloBase implements Serializable {
         protected Date fechaCreacion = new Date();
         protected Date fechaActualizacion = new Date();
         private Long id;
-        private String nroEstablecimiento;
         private String cuit;
+        private String cbu;
         private String razonSocial;
         private String domicilio;
 
@@ -116,13 +116,13 @@ public class Establecimiento extends ModeloBase implements Serializable {
             return this;
         }
 
-        public Builder withNroEstablecimiento(String nroEstablecimiento) {
-            this.nroEstablecimiento = nroEstablecimiento;
+        public Builder withCuit(String cuit) {
+            this.cuit = cuit;
             return this;
         }
 
-        public Builder withCuit(String cuit) {
-            this.cuit = cuit;
+        public Builder withCbu(String cbu){
+            this.cbu = cbu;
             return this;
         }
 
@@ -142,8 +142,8 @@ public class Establecimiento extends ModeloBase implements Serializable {
             establecimiento.setFechaCreacion(fechaCreacion);
             establecimiento.setFechaActualizacion(fechaActualizacion);
             establecimiento.setId(id);
-            establecimiento.setNroEstablecimiento(nroEstablecimiento);
             establecimiento.setCuit(cuit);
+            establecimiento.setCbu(cbu);
             establecimiento.setRazonSocial(razonSocial);
             establecimiento.setDomicilio(domicilio);
             return establecimiento;

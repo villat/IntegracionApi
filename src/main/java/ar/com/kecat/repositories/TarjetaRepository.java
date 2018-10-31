@@ -18,4 +18,6 @@ public interface TarjetaRepository extends CrudRepository<Tarjeta, Long> {
         save(tarjeta);
     }
 
+    Tarjeta findByNroTarjeta(String nroTarjeta);
+
 }

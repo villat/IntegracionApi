@@ -1,3 +1,4 @@
 .idea
 Workspace.iml
 target/
+src/main/resources/*

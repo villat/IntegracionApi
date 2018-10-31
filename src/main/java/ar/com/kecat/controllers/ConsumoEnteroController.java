@@ -44,30 +44,27 @@ public class ConsumoEnteroController {
         binder.addValidators(validator);
     }
 
-    @PostMapping("/tarjetas/{idTarjeta}/consumosEnteros")
-    @ResponseBody ResponseEntity postConsumoEntero(@PathVariable Long idTarjeta, @Valid @RequestBody ConsumoEnteroForm consumoEnteroForm){
+    @PostMapping("/tarjetas/{nroTarjeta}/consumosEnteros")
+    @ResponseBody ResponseEntity postConsumoEntero(@PathVariable String nroTarjeta, @Valid @RequestBody ConsumoEnteroForm consumoEnteroForm){
         Establecimiento establecimiento = Optional.ofNullable(consumoEnteroForm.getIdEstablecimiento())
                 .map(id -> establecimientoRepository.findOne(id)).orElse(null);
-        if(establecimiento != null){
-            Tarjeta tarjeta = tarjetaRepository.findOne(idTarjeta);
-            //El código de seguridad debe coincidir con el de la tarjeta almacenada
-            if(tarjeta != null && consumoEnteroForm.getCodigoSeguridad().compareTo(tarjeta.getCodigoSeguridad()) == 0){
-                Liquidacion liquidacion = liquidacionRepository.findByEstadoAndTarjeta(Liquidacion.Estado.ABIERTA, tarjeta);
-                ConsumoEntero consumoEntero = ConsumoEntero.Builder.create()
-                        .withDescripcion(consumoEnteroForm.getDescripcion())
-                        .withEstablecimiento(establecimiento)
-                        .withFecha(consumoEnteroForm.getFecha())
-                        .withMonto(consumoEnteroForm.getMonto())
-                        .withLiquidacion(liquidacion)
-                        .build();
-                consumoEnteroRepository.save(consumoEntero);
-                return ResponseEntity.status(HttpStatus.OK).body(consumoEntero);
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tarjeta o código de seguridad inválidos");
-            }
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Establecimiento no válido");
-    }
+        if(establecimiento == null) ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Establecimiento no válido");
 
+        Tarjeta tarjeta = tarjetaRepository.findByNroTarjeta(nroTarjeta);
+        //El código de seguridad debe coincidir con el de la tarjeta almacenada
+        if(tarjeta == null || consumoEnteroForm.getCodigoSeguridad().compareTo(tarjeta.getCodigoSeguridad()) != 0)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tarjeta o código de seguridad inválidos");
+
+        Liquidacion liquidacion = liquidacionRepository.findByEstadoAndTarjeta(Liquidacion.Estado.ABIERTA, tarjeta);
+        ConsumoEntero consumoEntero = ConsumoEntero.Builder.create()
+                .withDescripcion(consumoEnteroForm.getDescripcion())
+                .withEstablecimiento(establecimiento)
+                .withFecha(consumoEnteroForm.getFecha())
+                .withMonto(consumoEnteroForm.getMonto())
+                .withLiquidacion(liquidacion)
+                .build();
+        consumoEnteroRepository.save(consumoEntero);
+        return ResponseEntity.status(HttpStatus.OK).body(consumoEntero);
+    }
 
 }

@@ -16,9 +16,6 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
     @Column(name = "cant_cuotas")
     private Integer cantCuotas;
 
-    @Column(name = "monto_cuota")
-    private BigDecimal montoCuota;
-
     @Column(name = "interes")
     private Long interes;
 
@@ -28,14 +25,6 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
 
     public void setCantCuotas(Integer cantCuotas) {
         this.cantCuotas = cantCuotas;
-    }
-
-    public BigDecimal getMontoCuota() {
-        return montoCuota;
-    }
-
-    public void setMontoCuota(BigDecimal montoCuota) {
-        this.montoCuota = montoCuota;
     }
 
     public Long getInteres() {
@@ -54,7 +43,6 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
         private Long id;
         private Integer cantCuotas;
         private Date fecha = new Date();
-        private BigDecimal montoCuota;
         private Long interes;
         private Establecimiento establecimiento;
         private String descripcion;
@@ -102,11 +90,6 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
             return this;
         }
 
-        public Builder withMontoCuota(BigDecimal montoCuota) {
-            this.montoCuota = montoCuota;
-            return this;
-        }
-
         public Builder withInteres(Long interes) {
             this.interes = interes;
             return this;
@@ -136,7 +119,6 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
             consumoEnCuotas.setId(id);
             consumoEnCuotas.setCantCuotas(cantCuotas);
             consumoEnCuotas.setFecha(fecha);
-            consumoEnCuotas.setMontoCuota(montoCuota);
             consumoEnCuotas.setInteres(interes);
             consumoEnCuotas.setEstablecimiento(establecimiento);
             consumoEnCuotas.setDescripcion(descripcion);

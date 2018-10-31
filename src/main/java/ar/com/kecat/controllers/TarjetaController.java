@@ -44,37 +44,34 @@ public class TarjetaController {
     @ResponseBody ResponseEntity postTarjeta(@Valid @RequestBody TarjetaForm tarjetaForm){
         Cliente cliente = Optional.ofNullable(tarjetaForm.getIdCliente())
                 .map(id -> clienteRepository.findOne(id)).orElse(null);
-        if(cliente != null){
-            Tarjeta tarjeta = Tarjeta.Builder.create()
-                    .withCliente(cliente)
-                    .withNroTarjeta(tarjetaForm.getNroTarjeta())
-                    .withCategoria(tarjetaForm.getCategoria())
-                    .withCodigoSeguridad(tarjetaForm.getCodigoSeguridad())
-                    .withDiaCierre(tarjetaForm.getDiaCierre())
-                    .withFechaValidaDesde(tarjetaForm.getFechaValidaDesde())
-                    .withFechaValidaHasta(tarjetaForm.getFechaValidaHasta())
-                    .withMontoLimite(tarjetaForm.getMontoLimite())
-                    .build();
-            tarjetaRepository.save(tarjeta);
+        if(cliente == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cliente no válido");
 
-            //Se calculan las fechas necesarias para la liquidacion
-            int diaCierre = tarjeta.getDiaCierre().intValue();
-            Date fechaCierre = DateUtils.getDateOneMonthLaterByDay(diaCierre);
-            Date fechaVencimiento = DateUtils.getDateOneMonthAnd14DaysLaterByDay(diaCierre);
+        Tarjeta tarjeta = Tarjeta.Builder.create()
+                .withCliente(cliente)
+                .withNroTarjeta(tarjetaForm.getNroTarjeta())
+                .withCategoria(tarjetaForm.getCategoria())
+                .withCodigoSeguridad(tarjetaForm.getCodigoSeguridad())
+                .withDiaCierre(tarjetaForm.getDiaCierre())
+                .withFechaValidaDesde(tarjetaForm.getFechaValidaDesde())
+                .withFechaValidaHasta(tarjetaForm.getFechaValidaHasta())
+                .withMontoLimite(tarjetaForm.getMontoLimite())
+                .build();
+        tarjetaRepository.save(tarjeta);
 
-            //Se inicializa la primer liquidación
-            Liquidacion liquidacion = Liquidacion.Builder.create()
-                    .withEstado(Liquidacion.Estado.ABIERTA)
-                    .withTarjeta(tarjeta)
-                    .withFechaCierre(fechaCierre)
-                    .withFechaVencimiento(fechaVencimiento)
-                    .build();
-            liquidacionRepository.save(liquidacion);
+        //Se calculan las fechas necesarias para la liquidacion
+        int diaCierre = tarjeta.getDiaCierre().intValue();
+        Date fechaCierre = DateUtils.getDateOneMonthLaterByDay(diaCierre);
+        Date fechaVencimiento = DateUtils.getDateOneMonthAnd14DaysLaterByDay(diaCierre);
 
-            return ResponseEntity.status(HttpStatus.OK).body(tarjeta);
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cliente no válido");
+        //Se inicializa la primer liquidación
+        Liquidacion liquidacion = Liquidacion.Builder.create()
+                .withEstado(Liquidacion.Estado.ABIERTA)
+                .withTarjeta(tarjeta)
+                .withFechaCierre(fechaCierre)
+                .withFechaVencimiento(fechaVencimiento)
+                .build();
+        liquidacionRepository.save(liquidacion);
+
+        return ResponseEntity.status(HttpStatus.OK).body(tarjeta);
     }
-
-
 }
