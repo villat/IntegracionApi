@@ -1,11 +1,13 @@
 package ar.com.kecat.repositories;
 
 import ar.com.kecat.models.Liquidacion;
+import ar.com.kecat.models.Liquidacion.Estado;
+import ar.com.kecat.models.Tarjeta;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.data.rest.core.annotation.RestResource;
 
-import java.util.Optional;
+import java.util.List;
 
 @RepositoryRestResource(path = "/liquidaciones", collectionResourceRel = "liquidaciones")
 public interface LiquidacionRepository extends CrudRepository<Liquidacion, Long> {
@@ -16,4 +18,6 @@ public interface LiquidacionRepository extends CrudRepository<Liquidacion, Long>
         save(liquidacion);
     }
 
+    @Query("SELECT liq FROM Liquidacion liq WHERE liq.estado = :estado AND liq.tarjeta = :tarjeta")
+    Liquidacion findByEstadoAndTarjeta(Estado estado, Tarjeta tarjeta);
 }
