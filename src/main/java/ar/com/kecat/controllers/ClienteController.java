@@ -21,17 +21,17 @@ public class ClienteController {
     private ClienteRepository clienteRepository;
 
     @PutMapping("/clientes/{idCliente}")
-    @ResponseBody ResponseEntity<Cliente> putCliente(@PathVariable Long idCliente, @RequestBody ClienteForm clienteForm){
+    @ResponseBody ResponseEntity putCliente(@PathVariable Long idCliente, @RequestBody ClienteForm clienteForm){
         Cliente cliente = clienteRepository.findOne(idCliente);
-        if (updateCliente(clienteForm, cliente)) return new ResponseEntity<>(cliente, HttpStatus.ACCEPTED);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (updateCliente(clienteForm, cliente)) return ResponseEntity.status(HttpStatus.ACCEPTED).body(cliente);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @PatchMapping("/clientes/{idCliente}")
-    @ResponseBody ResponseEntity<Cliente> patchCliente(@PathVariable Long idCliente, @RequestBody ClienteForm clienteForm){
+    @ResponseBody ResponseEntity patchCliente(@PathVariable Long idCliente, @RequestBody ClienteForm clienteForm){
         Cliente cliente = clienteRepository.findOne(idCliente);
-        if (updateCliente(clienteForm, cliente)) return new ResponseEntity<>(cliente, HttpStatus.ACCEPTED);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (updateCliente(clienteForm, cliente)) return ResponseEntity.status(HttpStatus.ACCEPTED).body(cliente);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     private boolean updateCliente(@RequestBody ClienteForm clienteForm, Cliente cliente) {
