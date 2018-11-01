@@ -10,10 +10,6 @@ public class DateUtils {
         return Date.from(getLocalDateFromDate(date).plusMonths(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
 
-    public static Date getDateNDaysLaterByDate(Date date, int dias){
-        return Date.from(getLocalDateFromDate(date).plusDays(dias).atStartOfDay(ZoneId.systemDefault()).toInstant());
-    }
-
     public static Date getDateOneMonthLaterByDay(int day){
         return Date.from(getLocalDateOneMonthLaterByDay(day).atStartOfDay(ZoneId.systemDefault()).toInstant());
     }

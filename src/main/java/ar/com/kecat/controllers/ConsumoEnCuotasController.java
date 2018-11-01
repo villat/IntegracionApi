@@ -2,10 +2,12 @@ package ar.com.kecat.controllers;
 
 import ar.com.kecat.forms.ConsumoEnCuotasForm;
 import ar.com.kecat.models.ConsumoEnCuotas;
+import ar.com.kecat.models.Cuota;
 import ar.com.kecat.models.Establecimiento;
 import ar.com.kecat.models.Liquidacion;
 import ar.com.kecat.models.Tarjeta;
 import ar.com.kecat.repositories.ConsumoEnCuotasRepository;
+import ar.com.kecat.repositories.CuotasRepository;
 import ar.com.kecat.repositories.EstablecimientoRepository;
 import ar.com.kecat.repositories.LiquidacionRepository;
 import ar.com.kecat.repositories.TarjetaRepository;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.Optional;
 
 
@@ -30,6 +33,8 @@ public class ConsumoEnCuotasController {
 
     @Autowired
     private ConsumoEnCuotasRepository consumoEnCuotasRepository;
+    @Autowired
+    private CuotasRepository cuotasRepository;
     @Autowired
     private EstablecimientoRepository establecimientoRepository;
     @Autowired
@@ -56,6 +61,8 @@ public class ConsumoEnCuotasController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tarjeta o código de seguridad inválidos");
 
         Liquidacion liquidacion = liquidacionRepository.findByEstadoAndTarjeta(Liquidacion.Estado.ABIERTA, tarjeta);
+
+        //Generamos el consumo en cuotas
         ConsumoEnCuotas consumoEnCuotas = ConsumoEnCuotas.Builder.create()
                 .withDescripcion(consumoEnCuotasForm.getDescripcion())
                 .withEstablecimiento(establecimiento)
@@ -66,6 +73,16 @@ public class ConsumoEnCuotasController {
                 .withInteres(consumoEnCuotasForm.getInteres())
                 .build();
         consumoEnCuotasRepository.save(consumoEnCuotas);
+
+        //Generamos la primer cuota
+        Cuota cuota = Cuota.Builder.create()
+                .withMontoCuota(consumoEnCuotas.calcularMontoCuota())
+                .withNumeroDeCuota(1)
+                .withConsumoEnCuotas(consumoEnCuotas)
+                .withLiquidacion(liquidacion)
+                .build();
+        cuotasRepository.save(cuota);
+
         return ResponseEntity.status(HttpStatus.OK).body(consumoEnCuotas);
     }
 

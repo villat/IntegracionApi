@@ -26,6 +26,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Entity
 @Table(name="liquidaciones")
@@ -62,6 +64,11 @@ public class Liquidacion extends ModeloBase implements Serializable {
     @Fetch(value = FetchMode.SUBSELECT)
     @Where(clause ="activo =1")
     private List<Cobranza> cobranzas = new ArrayList<>();
+
+    @OneToMany(mappedBy="liquidacion",fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @Where(clause ="activo =1")
+    private List<Cuota> cuotas = new ArrayList<>();
 
     public enum Estado {
         ABIERTA ("Liquidación actual"),
@@ -100,25 +107,21 @@ public class Liquidacion extends ModeloBase implements Serializable {
     }
 
     private BigDecimal calcularSaldoDeConsumosEnCuotas(){
-        return consumos.stream()
-                .filter(ConsumoEnCuotas.class::isInstance)
-                .map(ConsumoEnCuotas.class::cast)
-                .map(ConsumoEnCuotas::montoCuota)
+        return cuotas.stream()
+                .map(Cuota::getMontoCuota)
                 .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
-//    private BigDecimal liquidarConsumosEnCuotas(){
-//        final LocalDate hoy = DateUtils.getLocalDateFromDate(new Date());
-//        return consumos.stream()
-//                .filter(ConsumoEnCuotas.class::isInstance)
-//                .map(ConsumoEnCuotas.class::cast)
-//                .filter(ConsumoEnCuotas::hayCuotasPendientes)
-//                .map(consumo -> {
-//                    if(ChronoUnit.DAYS.between(DateUtils.getLocalDateFromDate(consumo.getFecha()), hoy)%30 == 0){
-//                        //TODO: Impactar el consumo
-//                    }
-//                });
-//    }
+    public List<Cuota> generarNuevasCuotas(){
+        return cuotas.stream()
+                .filter(cuota -> cuota.getNumeroDeCuota().compareTo(cuota.getConsumoEnCuotas().getCantCuotas()) < 0)
+                .map(cuota -> Cuota.Builder.create()
+                        .withMontoCuota(cuota.getMontoCuota())
+                        .withNumeroDeCuota(cuota.getNumeroDeCuota()+1)
+                        .withConsumoEnCuotas(cuota.getConsumoEnCuotas())
+                        .build())
+                .collect(Collectors.toList());
+    }
 
     public Long getId() {
         return id;
@@ -168,6 +171,14 @@ public class Liquidacion extends ModeloBase implements Serializable {
         this.cobranzas = cobranzas;
     }
 
+    public List<Cuota> getCuotas() {
+        return cuotas;
+    }
+
+    public void setCuotas(List<Cuota> cuotas) {
+        this.cuotas = cuotas;
+    }
+
     public Estado getEstado() {
         return estado;
     }
@@ -194,6 +205,7 @@ public class Liquidacion extends ModeloBase implements Serializable {
         private Date fechaVencimiento= new Date();
         private List<Consumo> consumos = new ArrayList<>();
         private List<Cobranza> cobranzas = new ArrayList<>();
+        private List<Cuota> cuotas = new ArrayList<>();
         private Estado estado;
         private Boolean pagada = false;
 
@@ -249,6 +261,11 @@ public class Liquidacion extends ModeloBase implements Serializable {
             return this;
         }
 
+        public Builder withCuotas(List<Cuota> cuotas) {
+            this.cuotas = cuotas;
+            return this;
+        }
+
         public Builder withEstado(Estado estado) {
             this.estado = estado;
             return this;
@@ -270,6 +287,7 @@ public class Liquidacion extends ModeloBase implements Serializable {
             liquidacion.setFechaVencimiento(fechaVencimiento);
             liquidacion.setConsumos(consumos);
             liquidacion.setCobranzas(cobranzas);
+            liquidacion.setCuotas(cuotas);
             liquidacion.setEstado(estado);
             liquidacion.setPagada(pagada);
             return liquidacion;

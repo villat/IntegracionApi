@@ -1,14 +1,19 @@
 package ar.com.kecat.models;
 
-import ar.com.kecat.helpers.DateUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="consumos_en_cuotas")
@@ -22,22 +27,13 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
     @Column(name = "interes")
     private Long interes;
 
-    @Column(name = "saldado")
-    private Boolean saldado = false;
+    @OneToMany(mappedBy="consumoEnCuotas",fetch = FetchType.LAZY)
+    @Where(clause ="activo =1")
+    @JsonIgnore
+    private List<Cuota> cuotas = new ArrayList<>();
 
-    public boolean hayCuotasPendientes(){
-        if(saldado) return false;
-        //Calculamos hasta que mes hay que pagar cuotas, se le resta 1 porque en la liquidación actual ya se cargó el consumo
-        //Y lo multiplicamos por 30 para evitar problemas con meses como febrero u otros que tienen 31 días.
-        if(!DateUtils.getDateNDaysLaterByDate(fecha, (cantCuotas - 1)*30).after(new Date())){
-            saldado = true;
-            return false;
-        }
-        return true;
-    }
-
-    public BigDecimal montoCuota(){
-        return monto.divide(BigDecimal.valueOf(cantCuotas), RoundingMode.HALF_EVEN);
+    public BigDecimal calcularMontoCuota(){
+        return monto.divide(BigDecimal.valueOf(cantCuotas),RoundingMode.HALF_EVEN);
     }
 
     public Integer getCantCuotas() {
@@ -56,12 +52,12 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
         this.interes = interes;
     }
 
-    public Boolean getSaldado() {
-        return saldado;
+    public List<Cuota> getCuotas() {
+        return cuotas;
     }
 
-    public void setSaldado(Boolean saldado) {
-        this.saldado = saldado;
+    public void setCuotas(List<Cuota> cuotas) {
+        this.cuotas = cuotas;
     }
 
     public static final class Builder {
@@ -73,10 +69,10 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
         private Integer cantCuotas;
         private Date fecha = new Date();
         private Long interes;
-        private Boolean saldado = false;
         private Establecimiento establecimiento;
         private String descripcion;
         private BigDecimal monto;
+        private List<Cuota> cuotas = new ArrayList<>();
 
         private Builder() {
         }
@@ -125,11 +121,6 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
             return this;
         }
 
-        public Builder withSaldado(Boolean saldado) {
-            this.saldado = saldado;
-            return this;
-        }
-
         public Builder withEstablecimiento(Establecimiento establecimiento) {
             this.establecimiento = establecimiento;
             return this;
@@ -145,6 +136,11 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
             return this;
         }
 
+        public Builder withCuotas(List<Cuota> cuotas){
+            this.cuotas = cuotas;
+            return this;
+        }
+
         public ConsumoEnCuotas build() {
             ConsumoEnCuotas consumoEnCuotas = new ConsumoEnCuotas();
             consumoEnCuotas.setActivo(activo);
@@ -155,10 +151,10 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
             consumoEnCuotas.setCantCuotas(cantCuotas);
             consumoEnCuotas.setFecha(fecha);
             consumoEnCuotas.setInteres(interes);
-            consumoEnCuotas.setSaldado(saldado);
             consumoEnCuotas.setEstablecimiento(establecimiento);
             consumoEnCuotas.setDescripcion(descripcion);
             consumoEnCuotas.setMonto(monto);
+            consumoEnCuotas.setCuotas(cuotas);
             return consumoEnCuotas;
         }
     }
