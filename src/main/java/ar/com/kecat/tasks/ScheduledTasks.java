@@ -67,6 +67,8 @@ public class ScheduledTasks {
                         String transferenciaJson = jsonMapper.writeValueAsString(transferenciaDTO);
                         HttpEntity<String> entity = new HttpEntity<>(transferenciaJson, headers);
                         ResponseEntity<String> response = restTemplate.exchange(URI, HttpMethod.POST, entity, String.class);
+                        response.getStatusCode();
+                        //Si el status es 200, cargar la cobranza
                         log.info(response.toString());
                     } catch (JsonProcessingException e) {
                         log.error("No fue posible informarle al banco sobre la liquidacion: {}", liquidacion.getId());
