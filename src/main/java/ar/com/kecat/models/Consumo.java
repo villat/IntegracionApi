@@ -50,7 +50,7 @@ public abstract class Consumo extends ModeloBase implements Serializable {
     private String descripcion;
 
     @Column(name="monto")
-    private BigDecimal monto;
+    protected BigDecimal monto;
 
     public Long getId() {
         return id;

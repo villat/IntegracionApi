@@ -1,6 +1,5 @@
 package ar.com.kecat.models;
 
-import ar.com.kecat.helpers.DateUtils;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -24,8 +23,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -103,17 +100,25 @@ public class Liquidacion extends ModeloBase implements Serializable {
     }
 
     private BigDecimal calcularSaldoDeConsumosEnCuotas(){
-        final LocalDate hoy = DateUtils.getLocalDateFromDate(new Date());
         return consumos.stream()
                 .filter(ConsumoEnCuotas.class::isInstance)
                 .map(ConsumoEnCuotas.class::cast)
-                .filter(ConsumoEnCuotas::hayCuotasPendientes)
-                .map(consumo -> {
-                    if(ChronoUnit.DAYS.between(DateUtils.getLocalDateFromDate(consumo.getFecha()), hoy)%30 == 0){
-                        //TODO: Impactar el consumo
-                    }
-                });
+                .map(ConsumoEnCuotas::montoCuota)
+                .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
+
+//    private BigDecimal liquidarConsumosEnCuotas(){
+//        final LocalDate hoy = DateUtils.getLocalDateFromDate(new Date());
+//        return consumos.stream()
+//                .filter(ConsumoEnCuotas.class::isInstance)
+//                .map(ConsumoEnCuotas.class::cast)
+//                .filter(ConsumoEnCuotas::hayCuotasPendientes)
+//                .map(consumo -> {
+//                    if(ChronoUnit.DAYS.between(DateUtils.getLocalDateFromDate(consumo.getFecha()), hoy)%30 == 0){
+//                        //TODO: Impactar el consumo
+//                    }
+//                });
+//    }
 
     public Long getId() {
         return id;

@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 @Entity
@@ -33,6 +34,10 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
             return false;
         }
         return true;
+    }
+
+    public BigDecimal montoCuota(){
+        return monto.divide(BigDecimal.valueOf(cantCuotas), RoundingMode.HALF_EVEN);
     }
 
     public Integer getCantCuotas() {
