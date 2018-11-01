@@ -30,7 +30,7 @@ public class ScheduledTasks {
     //Se ejecuta todos los días a la medianoche
     @Transactional
     @Scheduled(cron = "0 0 0 * * ?")
-    public void reportCurrentTime() {
+    public void procesarLiquidaciones() {
         log.info("Procesamiento de liquidaciones en curso {}", dateFormat.format(new Date()));
 
         final Date hoy = new Date();
