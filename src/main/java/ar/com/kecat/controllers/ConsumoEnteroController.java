@@ -56,6 +56,7 @@ public class ConsumoEnteroController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tarjeta o código de seguridad inválidos");
 
         Liquidacion liquidacion = liquidacionRepository.findByEstadoAndTarjeta(Liquidacion.Estado.ABIERTA, tarjeta);
+        if(liquidacion == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No hay liquidación asociada, consulte a la empresa");
         ConsumoEntero consumoEntero = ConsumoEntero.Builder.create()
                 .withDescripcion(consumoEnteroForm.getDescripcion())
                 .withEstablecimiento(establecimiento)

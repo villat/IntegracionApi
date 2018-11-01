@@ -1,7 +1,6 @@
 package ar.com.kecat.models;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
@@ -24,7 +23,6 @@ import java.util.Date;
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Where(clause = "activo = 1")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id", scope = Long.class)
 public abstract class Consumo extends ModeloBase implements Serializable {
 
     private static final long serialVersionUID = 6910981906430940268L;
@@ -36,6 +34,7 @@ public abstract class Consumo extends ModeloBase implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_liquidacion")
+    @JsonIgnore
     private Liquidacion liquidacion;
 
     @Temporal(TemporalType.TIMESTAMP)
