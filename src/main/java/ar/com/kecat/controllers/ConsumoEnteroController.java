@@ -55,8 +55,12 @@ public class ConsumoEnteroController {
         if(tarjeta == null || consumoEnteroForm.getCodigoSeguridad().compareTo(tarjeta.getCodigoSeguridad()) != 0)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Tarjeta o código de seguridad inválidos");
 
+        if(!tarjeta.alcanzaLimiteDisponible(consumoEnteroForm.getMonto()))
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("El limite disponible de la tarjeta no es suficiente para realizar el pago");
+
         Liquidacion liquidacion = liquidacionRepository.findByEstadoAndTarjeta(Liquidacion.Estado.ABIERTA, tarjeta);
         if(liquidacion == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No hay liquidación asociada, consulte a la empresa");
+
         ConsumoEntero consumoEntero = ConsumoEntero.Builder.create()
                 .withDescripcion(consumoEnteroForm.getDescripcion())
                 .withEstablecimiento(establecimiento)

@@ -91,6 +91,11 @@ public class Liquidacion extends ModeloBase implements Serializable {
     @Column(name="pagada")
     private Boolean pagada = false;
 
+    //Si la tarjeta tiene pago mínimo, se debita solo el 10% del saldo total. Caso contrario, se hace debito total.
+    public BigDecimal calcularSaldoADebitar(){
+        return tarjeta.getPagoMinimo() ? calcularSaldoPendiente().multiply(BigDecimal.valueOf(0.10)) : calcularSaldoPendiente();
+    }
+
     public BigDecimal calcularSaldoPendiente(){
         if(pagada) return BigDecimal.ZERO;
         BigDecimal montoConsumos = calcularSaldoDeConsumosEnteros().add(calcularSaldoDeConsumosEnCuotas());
@@ -112,13 +117,14 @@ public class Liquidacion extends ModeloBase implements Serializable {
                 .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
-    public List<Cuota> generarNuevasCuotas(){
+    public List<Cuota> generarNuevasCuotas(final Liquidacion nuevaLiquidacion){
         return cuotas.stream()
                 .filter(cuota -> cuota.getNumeroDeCuota().compareTo(cuota.getConsumoEnCuotas().getCantCuotas()) < 0)
                 .map(cuota -> Cuota.Builder.create()
                         .withMontoCuota(cuota.getMontoCuota())
                         .withNumeroDeCuota(cuota.getNumeroDeCuota()+1)
                         .withConsumoEnCuotas(cuota.getConsumoEnCuotas())
+                        .withLiquidacion(nuevaLiquidacion)
                         .build())
                 .collect(Collectors.toList());
     }

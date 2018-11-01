@@ -72,6 +72,17 @@ public class Tarjeta extends ModeloBase implements Serializable {
     @Where(clause ="activo =1")
     private List<Liquidacion> liquidaciones = new ArrayList<>();
 
+    public boolean alcanzaLimiteDisponible(BigDecimal monto){
+        //Si el monto es mayor al limite, ni siquiera calculo cuanto limite disponible tiene
+        if (monto.compareTo(montoLimite) > 0) return false;
+        //Sino, me fijo los consumos VS las cobranzas para saber si le alcanza la plata
+        BigDecimal limiteDisponible = montoLimite.subtract(liquidaciones.stream()
+                .map(Liquidacion::calcularSaldoPendiente)
+                .reduce(BigDecimal::add)
+                .orElse(BigDecimal.ZERO));
+        return monto.compareTo(limiteDisponible) <= 0;
+    }
+
     public Long getId() {
         return id;
     }

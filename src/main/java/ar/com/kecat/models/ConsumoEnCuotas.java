@@ -10,7 +10,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +32,7 @@ public class ConsumoEnCuotas extends Consumo implements Serializable {
     private List<Cuota> cuotas = new ArrayList<>();
 
     public BigDecimal calcularMontoCuota(){
-        return monto.divide(BigDecimal.valueOf(cantCuotas),RoundingMode.HALF_EVEN);
+        return monto.divide(BigDecimal.valueOf(cantCuotas));
     }
 
     public Integer getCantCuotas() {

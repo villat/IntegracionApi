@@ -55,6 +55,10 @@ public class Cliente extends ModeloBase implements Serializable {
     @Where(clause ="activo =1")
     private List<Tarjeta> tarjetas = new ArrayList<>();
 
+    public String getNombreCompleto(){
+        return apellido + ", " + nombre;
+    }
+
     public Long getId() {
         return id;
     }
