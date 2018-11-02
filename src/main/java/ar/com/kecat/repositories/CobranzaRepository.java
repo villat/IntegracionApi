@@ -1,7 +1,6 @@
 package ar.com.kecat.repositories;
 
 import ar.com.kecat.models.Cobranza;
-import ar.com.kecat.models.Tarjeta;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;

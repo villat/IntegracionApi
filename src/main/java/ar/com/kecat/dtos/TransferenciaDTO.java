@@ -1,7 +1,6 @@
 package ar.com.kecat.dtos;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class TransferenciaDTO {
 
@@ -9,7 +8,7 @@ public class TransferenciaDTO {
     private String destino;
     private BigDecimal monto;
     private String descripcion;
-    private Date fecha;
+    private String fecha;
 
     public String getOrigen() {
         return origen;
@@ -43,21 +42,20 @@ public class TransferenciaDTO {
         this.descripcion = descripcion;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
-
 
     public static final class Builder {
         private String origen;
         private String destino;
         private BigDecimal monto;
         private String descripcion;
-        private Date fecha;
+        private String fecha;
 
         private Builder() {
         }
@@ -86,7 +84,7 @@ public class TransferenciaDTO {
             return this;
         }
 
-        public Builder withFecha(Date fecha) {
+        public Builder withFecha(String fecha) {
             this.fecha = fecha;
             return this;
         }
