@@ -36,7 +36,7 @@ public class ScheduledTasks {
 
     private static final Logger log = LoggerFactory.getLogger(ScheduledTasks.class);
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-    private static final String URI = "http://192.168.215.34:8080/api/transferencia";
+    private static final String URI_BANCO = "http://192.168.214.111:8080/api/transferencia";
     private static final String CBU_NUESTRO = "444455555666666";
 
     @Autowired
@@ -76,7 +76,7 @@ public class ScheduledTasks {
                     try {
                         String transferenciaJson = jsonMapper.writeValueAsString(transferenciaDTO);
                         HttpEntity<String> entity = new HttpEntity<>(transferenciaJson, headers);
-                        ResponseEntity<String> response = restTemplate.exchange(URI, HttpMethod.POST, entity, String.class);
+                        ResponseEntity<String> response = restTemplate.exchange(URI_BANCO, HttpMethod.POST, entity, String.class);
                         log.info(response.toString());
                         //Si el POST devuelve created, generamos la cobranza
                         if(response.getStatusCode().equals(HttpStatus.CREATED)){

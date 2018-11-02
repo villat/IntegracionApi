@@ -1,6 +1,7 @@
 package ar.com.kecat.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Where;
 
@@ -41,6 +42,7 @@ public class Cobranza extends ModeloBase implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_liquidacion")
+    @JsonIgnore
     private Liquidacion liquidacion;
 
     public Long getId() {

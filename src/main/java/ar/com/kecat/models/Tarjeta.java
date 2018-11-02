@@ -1,6 +1,7 @@
 package ar.com.kecat.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
@@ -39,7 +40,7 @@ public class Tarjeta extends ModeloBase implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_cliente")
-    @NotFound(action = NotFoundAction.IGNORE)
+    @JsonIgnore
     private Cliente cliente;
 
     @Column(name="nro_tarjeta")
