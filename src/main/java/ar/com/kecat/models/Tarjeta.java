@@ -3,6 +3,8 @@ package ar.com.kecat.models;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
@@ -68,6 +70,7 @@ public class Tarjeta extends ModeloBase implements Serializable {
     private Boolean pagoMinimo = false;
 
     @OneToMany(mappedBy="tarjeta",fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     @Where(clause ="activo =1")
     private List<Liquidacion> liquidaciones = new ArrayList<>();
 
